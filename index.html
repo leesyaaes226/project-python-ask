@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pengiraan Sudut Pedalaman Poligon</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Gaya fon monospaced seperti terminal Python */
+            background-color: #1e1e1e; /* Warna latar belakang gelap seperti terminal */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .terminal {
+            background-color: #000000;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+        h2 { text-align: center; color: #00ff00; margin-top: 0; }
+        .separator { color: #888; margin-bottom: 20px; text-align: center; }
+        .menu-box { background-color: #111; padding: 15px; border-radius: 5px; border: 1px solid #222; margin-bottom: 20px; }
+        .menu-title { font-weight: bold; color: #00ffff; margin-bottom: 10px; }
+        label { display: block; margin-bottom: 10px; color: #ffff00; font-weight: bold; }
+        input {
+            width: 90%;
+            padding: 10px;
+            background-color: #222;
+            border: 1px solid #444;
+            color: #fff;
+            font-family: inherit;
+            font-size: 16px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: inherit;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover { background-color: #00cc00; }
+        .output-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            white-space: pre-line; /* Mengekalkan format baris baharu seperti print() Python */
+        }
+        .success { background-color: #002200; border: 1px solid #00ff00; color: #00ff00; }
+        .error { background-color: #220000; border: 1px solid #ff0000; color: #ff0000; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="terminal">
+    <h2>SISTEM PENGIRAAN SUDUT PEDALAMAN POLIGON</h2>
+    <div class="separator">==============================================</div>
+
+    <!-- MENU UTAMA -->
+    <div class="menu-box">
+        <div class="menu-title">MENU UTAMA</div>
+        <div>1. Kira sudut pedalaman</div>
+        <div>2. Keluar</div>
+    </div>
+
+    <!-- INPUT PENGGUNA -->
+    <label for="pilihan">Masukkan pilihan anda (1/2):</label>
+    <input type="text" id="pilihan" placeholder="Taip 1 atau 2...">
+    
+    <!-- BAHAGIAN INPUT SISI (Akan muncul jika pilih 1) -->
+    <div id="ruangSisi" style="display:none;">
+        <label for="sisi">Masukkan bilangan sisi poligon:</label>
+        <input type="text" id="sisi" placeholder="Contoh: 3, 4, 5...">
+    </div>
+
+    <button onclick="prosesSistem()">Hantar / Run</button>
+
+    <!-- PAPARAN KEPUTUSAN / RALAT -->
+    <div id="output" class="output-box"></div>
+</div>
+
+<script>
+    // Memantau input pilihan untuk paparkan kotak input sisi secara dinamik
+    document.getElementById('pilihan').addEventListener('input', function() {
+        let p = this.value.trim();
+        if (p === "1") {
+            document.getElementById('ruangSisi').style.display = "block";
+        } else {
+            document.getElementById('ruangSisi').style.display = "none";
+        }
+    });
+
+    function prosesSistem() {
+        let pilihan = document.getElementById('pilihan').value.trim();
+        let outputDiv = document.getElementById('output');
+        
+        outputDiv.style.display = "block";
+        outputDiv.className = "output-box"; // Reset class
+
+        // -----------------------------------------------
+        // PILIHAN 1: MENGIRA SUDUT
+        // -----------------------------------------------
+        if (pilihan === "1") {
+            let sisiInput = document.getElementById('sisi').value.trim();
+
+            // PANDUAN PYTHON: except ValueError
+            // Menyemak sama ada input ialah nombor bulat (integer) yang sah
+            if (sisiInput === "" || isNaN(sisiInput) || !Number.isInteger(Number(sisiInput))) {
+                outputDiv.className += " error";
+                outputDiv.innerHTML = "Ralat! Sila masukkan nombor bulat sahaja.";
+                return;
+            }
+
+            let sisi = parseInt(sisiInput);
+
+            // PANDUAN PYTHON: if sisi < 3:
+            if (sisi < 3) {
+                outputDiv.className += " error";
+                outputDiv.innerHTML = "Ralat! Poligon mesti mempunyai sekurang-kurangnya 3 sisi.";
+                return;
+            }
+
+            // PANDUAN PYTHON: Formula jumlah & setiap sudut
+            let jumlah_sudut = (sisi - 2) * 180;
+            let setiap_sudut = jumlah_sudut / sisi;
+
+            // PANDUAN PYTHON: Tentukan nama poligon
+            let nama = "";
+            if (sisi === 3) nama = "Segi tiga";
+            else if (sisi === 4) nama = "Segi empat";
+            else if (sisi === 5) name = "Pentagon";
+            else if (sisi === 6) nama = "Heksagon";
+            else if (sisi === 7) nama = "Heptagon";
+            else if (sisi === 8) nama = "Oktagon";
+            else if (sisi === 9) nama = "Nonagon";
+            else if (sisi === 10) nama = "Dekagon";
+            else nama = "Poligon";
+
+            // PANDUAN PYTHON: print("KEPUTUSAN PENGIRAAN")
+            outputDiv.className += " success";
+            outputDiv.innerHTML = `               KEPUTUSAN PENGIRAAN
+            ==============================================
+            Bilangan sisi       : ${sisi}
+            Jumlah sudut        : ${jumlah_sudut}°
+            Setiap sudut        : ${setiap_sudut % 1 === 0 ? setiap_sudut : setiap_sudut.toFixed(2)}°
+            Jenis poligon       : ${nama}
+            ==============================================`;
+
+        // -----------------------------------------------
+        // PILIHAN 2: KELUAR
+        // -----------------------------------------------
+        } else if (pilihan === "2") {
+            outputDiv.className += " success";
+            outputDiv.innerHTML = "Terima kasih kerana menggunakan sistem ini.\nProgram ditamatkan.";
+            
+        // -----------------------------------------------
+        // PILIHAN TIDAK SAH
+        // -----------------------------------------------
+        } else {
+            outputDiv.className += " error";
+            outputDiv.innerHTML = "Pilihan tidak sah! Sila pilih 1 atau 2.";
+        }
+    }
+</script>
+
+</body>
+</html>
